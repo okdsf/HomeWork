@@ -1,15 +1,13 @@
--- -- -- -- farm 作业初始化
+-- =================================================================
+-- Farm Store Project - Database Setup Script
+-- =================================================================
 
-CREATE DATABASE IF NOT EXISTS farm_store_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+DROP DATABASE IF EXISTS farm_store_db;
 
--- 使用该数据库
+CREATE DATABASE farm_store_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Use the new database
 USE farm_store_db;
-
--- --- 表 1: Products (产品表) ---
-DROP TABLE IF EXISTS Sale_Items;
-DROP TABLE IF EXISTS Sales;
-DROP TABLE IF EXISTS Products;
-DROP TABLE IF EXISTS Customers;
 
 CREATE TABLE Products (
     product_id INT PRIMARY KEY AUTO_INCREMENT,

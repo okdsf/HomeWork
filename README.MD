@@ -23,7 +23,7 @@ Just run this command from the project's root directory:
 
 ```bash
 # Replace 'your_username' with your actual MySQL username (like 'root')
-mysql -u your_username -p < database_setup.sql
+mysql --default-character-set=utf8mb4 -u your_username -p < database_setup.sql
 ```
 It will ask for your MySQL password, and you'll be all set!
 
