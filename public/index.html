@@ -4,13 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farm Store Dashboard</title>
+    <title data-i18n-key="page.title">Farm Store Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <header>
-        <h1>农场商店管理系统 (Farm Store Dashboard)</h1>
+        <h1 data-i18n-key="header.title">Farm Store Dashboard</h1>
+        <div class="language-switcher">
+            <button id="lang-en" class="lang-btn active">English</button>
+            <button id="lang-zh" class="lang-btn">中文</button>
+        </div>
     </header>
 
     <main class="dashboard-container">
@@ -19,14 +23,14 @@
 
             <!-- 卡片一：产品与库存 -->
             <div class="card">
-                <h2>🗂️ 产品与库存管理</h2>
+                <h2 data-i18n-key="product_management.title">🗂️ Products & Stock Management</h2>
                 <table id="product-table">
                     <thead>
                         <tr>
-                            <th>产品名称</th>
-                            <th>单价 (HT)</th>
-                            <th>库存</th>
-                            <th>操作</th>
+                            <th data-i18n-key="product_table.headers.name">Product Name</th>
+                            <th data-i18n-key="product_table.headers.price">Price (HT)</th>
+                            <th data-i18n-key="product_table.headers.stock">Stock</th>
+                            <th data-i18n-key="product_table.headers.actions">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="product-table-body">
@@ -34,30 +38,41 @@
                     </tbody>
                 </table>
                 <details class="add-section">
-                    <summary>► 点击添加新产品</summary>
-                    <form id="add-product-form">
-                        <input type="text" id="new-product-name" placeholder="产品名称" required>
-                        <input type="number" id="new-product-price" placeholder="单价(HT)" step="0.01" required>
-                        <input type="number" id="new-product-stock" placeholder="初始库存" required>
-                        <button type="submit">确认添加</button>
+                    <summary data-i18n-key="product_management.add_section.summary">► Click to add a new product
+                    </summary>
+                    <form id="add-product-form" class="add-form">
+                        <input type="text" id="new-product-name"
+                            data-i18n-placeholder="product_management.form.name_placeholder" placeholder="Product Name"
+                            required>
+                        <input type="number" id="new-product-price"
+                            data-i18n-placeholder="product_management.form.price_placeholder" placeholder="Price (HT)"
+                            step="0.01" required>
+                        <input type="number" id="new-product-stock"
+                            data-i18n-placeholder="product_management.form.stock_placeholder"
+                            placeholder="Initial Stock" required>
+                        <button type="submit" data-i18n-key="product_management.form.submit_button">Confirm Add</button>
                     </form>
                 </details>
             </div>
 
             <!-- 卡片二：忠实客户 -->
             <div class="card">
-                <h2>👥 忠实客户管理</h2>
+                <h2 data-i18n-key="customer_management.title">👥 Loyal Customer Management</h2>
                 <ul id="customer-list">
                     <!-- 客户列表将由JS动态填充 -->
                 </ul>
-                <form id="add-customer-form" class="add-section">
-                    <input type="text" id="new-customer-firstname" placeholder="名" required>
-                    <input type="text" id="new-customer-lastname" placeholder="姓" required>
-                    <select id="new-customer-gender" required>
-                        <option value="Male">男 (Male)</option>
-                        <option value="Female">女 (Female)</option>
+                <form id="add-customer-form" class="add-section add-form">
+                    <input type="text" id="new-customer-firstname"
+                        data-i18n-placeholder="customer_management.form.firstname_placeholder" placeholder="First Name"
+                        required>
+                    <input type="text" id="new-customer-lastname"
+                        data-i18n-placeholder="customer_management.form.lastname_placeholder" placeholder="Last Name"
+                        required>
+                    <select id="new-customer-gender" required class="styled-select">
+                        <option value="Male" data-i18n-key="customer_management.gender.male">Male</option>
+                        <option value="Female" data-i18n-key="customer_management.gender.female">Female</option>
                     </select>
-                    <button type="submit">添加客户</button>
+                    <button type="submit" data-i18n-key="customer_management.form.submit_button">Add Customer</button>
                 </form>
             </div>
         </div>
@@ -67,19 +82,20 @@
 
             <!-- 卡片三：销售录入 -->
             <div class="card">
-                <h2>🛒 销售录入</h2>
+                <h2 data-i18n-key="sales_entry.title">🛒 Record a Sale</h2>
                 <form id="record-sale-form">
                     <div class="form-group">
-                        <label for="sale-product">产品:</label>
-                        <select id="sale-product" required></select>
+                        <label for="sale-product" data-i18n-key="sales_entry.form.product_label">Product:</label>
+                        <select id="sale-product" required class="styled-select"></select>
                     </div>
                     <div class="form-group">
-                        <label for="sale-quantity">数量:</label>
+                        <label for="sale-quantity" data-i18n-key="sales_entry.form.quantity_label">Quantity:</label>
                         <input type="number" id="sale-quantity" value="1" min="1" required>
                     </div>
-                    <button type="button" id="add-to-cart-btn">添加到清单</button>
+                    <button type="button" id="add-to-cart-btn" data-i18n-key="sales_entry.form.add_to_cart_button">Add
+                        to List</button>
 
-                    <h3>本次销售清单</h3>
+                    <h3 class="cart-title" data-i18n-key="sales_entry.cart_title">Current Sale List</h3>
                     <ul id="sale-cart">
                         <!-- 购物车项目将由JS动态添加 -->
                     </ul>
@@ -87,30 +103,33 @@
                     <hr>
 
                     <div class="form-group">
-                        <label for="sale-customer">客户 (可选):</label>
-                        <select id="sale-customer">
-                            <option value="">— 散客 —</option>
+                        <label for="sale-customer" data-i18n-key="sales_entry.form.customer_label">Customer
+                            (Optional):</label>
+                        <select id="sale-customer" class="styled-select">
+                            <option value="" data-i18n-key="sales_entry.form.walk_in_customer">— Walk-in Customer —
+                            </option>
                         </select>
                     </div>
 
-                    <h3 id="total-price">总计: €0.00</h3>
-                    <button type="submit" id="confirm-sale-btn">✓ 确认销售</button>
+                    <h3 id="total-price" data-i18n-key="sales_entry.total_price">Total: €0.00</h3>
+                    <button type="submit" id="confirm-sale-btn" data-i18n-key="sales_entry.form.confirm_sale_button">✓
+                        Confirm Sale</button>
                 </form>
             </div>
 
             <!-- 卡片四：销售业绩速览 -->
             <div class="card">
-                <h2>📊 销售业绩速览</h2>
+                <h2 data-i18n-key="sales_report.title">📊 Sales Snapshot</h2>
                 <div id="sales-report">
                     <div class="form-group">
-                        <label for="start-date">开始日期:</label>
+                        <label for="start-date" data-i18n-key="sales_report.form.start_date_label">Start Date:</label>
                         <input type="date" id="start-date">
                     </div>
                     <div class="form-group">
-                        <label for="end-date">结束日期:</label>
+                        <label for="end-date" data-i18n-key="sales_report.form.end_date_label">End Date:</label>
                         <input type="date" id="end-date">
                     </div>
-                    <button id="generate-report-btn">查询</button>
+                    <button id="generate-report-btn" data-i18n-key="sales_report.form.generate_button">Query</button>
                     <div id="report-result">
                         <!-- 报告结果将显示在这里 -->
                     </div>
