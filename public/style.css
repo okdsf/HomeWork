@@ -1,0 +1,180 @@
+/* 全局样式 */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    color: #333;
+}
+
+header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+}
+
+/* 仪表盘布局 */
+.dashboard-container {
+    display: flex;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* 卡片样式 */
+.card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+}
+
+.card h2 {
+    margin-top: 0;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+    color: #34495e;
+}
+
+/* 表格样式 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #ecf0f1;
+}
+
+/* 操作按钮 */
+td .stock-btn {
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    line-height: 22px;
+    text-align: center;
+    display: inline-block;
+    margin: 0 4px;
+    user-select: none;
+}
+
+.stock-btn.plus {
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+
+.stock-btn.minus {
+    background-color: #f2dede;
+    color: #a94442;
+}
+
+/* 低库存高亮 */
+tr.low-stock {
+    background-color: #fcf8e3;
+}
+
+/* 表单和输入框 */
+.add-section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed #ccc;
+}
+
+details>summary {
+    cursor: pointer;
+    font-weight: bold;
+    color: #3498db;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: calc(100% - 16px);
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+#confirm-sale-btn {
+    width: 100%;
+    background-color: #27ae60;
+}
+
+#confirm-sale-btn:hover {
+    background-color: #229954;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* 客户和购物车列表 */
+#customer-list,
+#sale-cart {
+    list-style: none;
+    padding: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+#customer-list li,
+#sale-cart li {
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#sale-cart .remove-item {
+    cursor: pointer;
+    color: #c0392b;
+    font-weight: bold;
+}
+
+/* 报告区域 */
+#report-result {
+    margin-top: 1rem;
+    background-color: #f9f9f9;
+    padding: 1rem;
+    border-radius: 4px;
+}

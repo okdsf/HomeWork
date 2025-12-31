@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Store Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>农场商店管理系统 (Farm Store Dashboard)</h1>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- 左栏：数据管理 -->
+        <div class="column" id="management-column">
+
+            <!-- 卡片一：产品与库存 -->
+            <div class="card">
+                <h2>🗂️ 产品与库存管理</h2>
+                <table id="product-table">
+                    <thead>
+                        <tr>
+                            <th>产品名称</th>
+                            <th>单价 (HT)</th>
+                            <th>库存</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-table-body">
+                        <!-- 产品数据将由JS动态填充 -->
+                    </tbody>
+                </table>
+                <details class="add-section">
+                    <summary>► 点击添加新产品</summary>
+                    <form id="add-product-form">
+                        <input type="text" id="new-product-name" placeholder="产品名称" required>
+                        <input type="number" id="new-product-price" placeholder="单价(HT)" step="0.01" required>
+                        <input type="number" id="new-product-stock" placeholder="初始库存" required>
+                        <button type="submit">确认添加</button>
+                    </form>
+                </details>
+            </div>
+
+            <!-- 卡片二：忠实客户 -->
+            <div class="card">
+                <h2>👥 忠实客户管理</h2>
+                <ul id="customer-list">
+                    <!-- 客户列表将由JS动态填充 -->
+                </ul>
+                <form id="add-customer-form" class="add-section">
+                    <input type="text" id="new-customer-firstname" placeholder="名" required>
+                    <input type="text" id="new-customer-lastname" placeholder="姓" required>
+                    <select id="new-customer-gender" required>
+                        <option value="Male">男 (Male)</option>
+                        <option value="Female">女 (Female)</option>
+                    </select>
+                    <button type="submit">添加客户</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 右栏：日常操作 -->
+        <div class="column" id="operations-column">
+
+            <!-- 卡片三：销售录入 -->
+            <div class="card">
+                <h2>🛒 销售录入</h2>
+                <form id="record-sale-form">
+                    <div class="form-group">
+                        <label for="sale-product">产品:</label>
+                        <select id="sale-product" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sale-quantity">数量:</label>
+                        <input type="number" id="sale-quantity" value="1" min="1" required>
+                    </div>
+                    <button type="button" id="add-to-cart-btn">添加到清单</button>
+
+                    <h3>本次销售清单</h3>
+                    <ul id="sale-cart">
+                        <!-- 购物车项目将由JS动态添加 -->
+                    </ul>
+
+                    <hr>
+
+                    <div class="form-group">
+                        <label for="sale-customer">客户 (可选):</label>
+                        <select id="sale-customer">
+                            <option value="">— 散客 —</option>
+                        </select>
+                    </div>
+
+                    <h3 id="total-price">总计: €0.00</h3>
+                    <button type="submit" id="confirm-sale-btn">✓ 确认销售</button>
+                </form>
+            </div>
+
+            <!-- 卡片四：销售业绩速览 -->
+            <div class="card">
+                <h2>📊 销售业绩速览</h2>
+                <div id="sales-report">
+                    <div class="form-group">
+                        <label for="start-date">开始日期:</label>
+                        <input type="date" id="start-date">
+                    </div>
+                    <div class="form-group">
+                        <label for="end-date">结束日期:</label>
+                        <input type="date" id="end-date">
+                    </div>
+                    <button id="generate-report-btn">查询</button>
+                    <div id="report-result">
+                        <!-- 报告结果将显示在这里 -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- 引入JavaScript文件 -->
+    <script src="script.js"></script>
+</body>
+
+</html>
