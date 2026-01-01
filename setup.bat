@@ -2,17 +2,17 @@
 chcp 65001 >nul
 setlocal EnableDelayedExpansion
 
-:: Farm Store Management Dashboard - One-Click Setup Script
-:: Supports: Windows
+:: Farm Store Management Dashboard - Setup & Start Script
+:: Automatically detects first run vs subsequent runs
 
 echo.
 echo ==============================================
-echo    Farm Store Management Dashboard Setup
+echo    Farm Store Management Dashboard
 echo ==============================================
 echo.
 
 :: Step 1: Environment Check
-echo [Step 1/5] Checking environment...
+echo [Step 1] Checking environment...
 echo.
 
 set MISSING=0
@@ -39,7 +39,6 @@ where mysql >nul 2>nul
 if %errorlevel%==0 (
     echo [OK] mysql is installed ^(in PATH^)
 ) else (
-    :: Check common MySQL installation paths
     if exist "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" (
         set "MYSQL_CMD=C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe"
         echo [OK] mysql found at MySQL Server 8.0
@@ -71,26 +70,46 @@ if %MISSING%==1 (
 echo.
 echo Environment check passed!
 
-:: Step 2: Get database configuration from user
+:: Check if this is first run (no .env file)
+if exist ".env" (
+    echo.
+    echo [INFO] Configuration found. Skipping setup...
+    goto :start_server
+)
+
+:: First run - need to configure
 echo.
-echo [Step 2/5] Database Configuration
+echo ==============================================
+echo    First Run - Database Configuration
+echo ==============================================
+echo.
+echo Note: Press ENTER to use default value shown in [brackets]
+echo       Items marked with * are REQUIRED
 echo.
 
-set /p DB_HOST="MySQL Host [localhost]: "
+set /p DB_HOST="  MySQL Host [localhost] (press ENTER for default): "
 if "!DB_HOST!"=="" set DB_HOST=localhost
 
-set /p DB_USER="MySQL Username [root]: "
+set /p DB_USER="  MySQL Username [root] (press ENTER for default): "
 if "!DB_USER!"=="" set DB_USER=root
 
-set /p DB_PASSWORD="MySQL Password: "
-
-set /p DB_NAME="Database Name [farm_store]: "
-if "!DB_NAME!"=="" set DB_NAME=farm_store
-
-:: Step 3: Create .env file
 echo.
-echo [Step 3/5] Creating .env file...
+echo   * MySQL Password is REQUIRED - please enter your password:
+set /p DB_PASSWORD="  MySQL Password: "
+if "!DB_PASSWORD!"=="" (
+    echo.
+    echo [ERROR] Password cannot be empty!
+    pause
+    exit /b 1
+)
+
 echo.
+set /p DB_NAME="  Database Name [farm_store_db] (press ENTER for default): "
+if "!DB_NAME!"=="" set DB_NAME=farm_store_db
+
+:: Create .env file
+echo.
+echo [Step 2] Creating .env file...
 
 (
 echo DB_HOST=!DB_HOST!
@@ -101,14 +120,13 @@ echo DB_NAME=!DB_NAME!
 
 echo .env file created successfully!
 
-:: Step 4: Initialize database
+:: Initialize database
 echo.
-echo [Step 4/5] Initializing database...
+echo [Step 3] Initializing database...
 echo.
 
-:: Create a temporary SQL file with correct database name
-if not "!DB_NAME!"=="farm_store" (
-    powershell -Command "(Get-Content database_setup.sql) -replace 'farm_store', '!DB_NAME!' | Set-Content database_setup_temp.sql"
+if not "!DB_NAME!"=="farm_store_db" (
+    powershell -Command "(Get-Content database_setup.sql) -replace 'farm_store_db', '!DB_NAME!' | Set-Content database_setup_temp.sql"
     "!MYSQL_CMD!" -h "!DB_HOST!" -u "!DB_USER!" -p"!DB_PASSWORD!" < database_setup_temp.sql
     del database_setup_temp.sql
 ) else (
@@ -123,23 +141,29 @@ if %errorlevel%==0 (
     exit /b 1
 )
 
-:: Step 5: Install dependencies and start server
-echo.
-echo [Step 5/5] Installing dependencies ^& starting server...
-echo.
-
-call npm install
+:start_server
+:: Install dependencies if needed
+if not exist "node_modules\" (
+    echo.
+    echo [Step 4] Installing dependencies...
+    call npm install
+)
 
 echo.
 echo ==============================================
-echo    Setup Complete!
+echo    Starting Server
 echo ==============================================
 echo.
-echo Starting server... The browser will open automatically.
+echo Server will start at: http://localhost:3000
 echo Press Ctrl+C to stop the server.
 echo.
 
-:: Open browser after a short delay
-start "" cmd /c "timeout /t 3 /nobreak >nul && start "" "%~dp0public\index.html""
+:: Try to open browser
+start "" http://localhost:3000 2>nul
+if %errorlevel% neq 0 (
+    echo [INFO] Could not open browser automatically.
+    echo        Please open http://localhost:3000 manually.
+    echo.
+)
 
 call npm start

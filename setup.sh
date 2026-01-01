@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Farm Store Management Dashboard - One-Click Setup Script
-# Supports: Linux / macOS
+# Farm Store Management Dashboard - Setup & Start Script
+# Automatically detects first run vs subsequent runs
 
 set -e
 
@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 
 echo -e "${BLUE}"
 echo "=============================================="
-echo "   Farm Store Management Dashboard Setup"
+echo "   Farm Store Management Dashboard"
 echo "=============================================="
 echo -e "${NC}"
 
@@ -30,7 +30,7 @@ check_command() {
 }
 
 # Step 1: Environment Check
-echo -e "\n${YELLOW}[Step 1/5] Checking environment...${NC}\n"
+echo -e "${YELLOW}[Step 1] Checking environment...${NC}\n"
 
 MISSING=0
 
@@ -45,71 +45,92 @@ fi
 
 echo -e "\n${GREEN}Environment check passed!${NC}"
 
-# Step 2: Get database configuration from user
-echo -e "\n${YELLOW}[Step 2/5] Database Configuration${NC}\n"
+# Check if this is first run (no .env file)
+if [ -f ".env" ]; then
+    echo -e "\n${GREEN}[INFO]${NC} Configuration found. Skipping setup..."
+else
+    # First run - need to configure
+    echo -e "\n${BLUE}=============================================="
+    echo "   First Run - Database Configuration"
+    echo -e "==============================================${NC}\n"
+    echo -e "Note: Press ENTER to use default value shown in [brackets]"
+    echo -e "      Items marked with ${RED}*${NC} are REQUIRED\n"
 
-read -p "MySQL Host [localhost]: " DB_HOST
-DB_HOST=${DB_HOST:-localhost}
+    read -p "  MySQL Host [localhost] (press ENTER for default): " DB_HOST
+    DB_HOST=${DB_HOST:-localhost}
 
-read -p "MySQL Username [root]: " DB_USER
-DB_USER=${DB_USER:-root}
+    read -p "  MySQL Username [root] (press ENTER for default): " DB_USER
+    DB_USER=${DB_USER:-root}
 
-read -sp "MySQL Password: " DB_PASSWORD
-echo ""
+    echo ""
+    echo -e "  ${RED}*${NC} MySQL Password is REQUIRED - please enter your password:"
+    read -sp "  MySQL Password: " DB_PASSWORD
+    echo ""
 
-read -p "Database Name [farm_store]: " DB_NAME
-DB_NAME=${DB_NAME:-farm_store}
+    if [ -z "$DB_PASSWORD" ]; then
+        echo -e "\n${RED}[ERROR] Password cannot be empty!${NC}"
+        exit 1
+    fi
 
-# Step 3: Create .env file
-echo -e "\n${YELLOW}[Step 3/5] Creating .env file...${NC}\n"
+    echo ""
+    read -p "  Database Name [farm_store_db] (press ENTER for default): " DB_NAME
+    DB_NAME=${DB_NAME:-farm_store_db}
 
-cat > .env << EOF
+    # Create .env file
+    echo -e "\n${YELLOW}[Step 2] Creating .env file...${NC}"
+
+    cat > .env << EOF
 DB_HOST=$DB_HOST
 DB_USER=$DB_USER
 DB_PASSWORD=$DB_PASSWORD
 DB_NAME=$DB_NAME
 EOF
 
-echo -e "${GREEN}.env file created successfully!${NC}"
+    echo -e "${GREEN}.env file created successfully!${NC}"
 
-# Step 4: Initialize database
-echo -e "\n${YELLOW}[Step 4/5] Initializing database...${NC}\n"
+    # Initialize database
+    echo -e "\n${YELLOW}[Step 3] Initializing database...${NC}\n"
 
-# Replace database name in SQL file if different
-if [ "$DB_NAME" != "farm_store" ]; then
-    sed -i.bak "s/farm_store/$DB_NAME/g" database_setup.sql
-fi
+    if [ "$DB_NAME" != "farm_store_db" ]; then
+        sed -i.bak "s/farm_store_db/$DB_NAME/g" database_setup.sql
+    fi
 
-mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" < database_setup.sql
+    mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" < database_setup.sql
 
-if [ $? -eq 0 ]; then
-    echo -e "${GREEN}Database initialized successfully!${NC}"
-else
-    echo -e "${RED}Database initialization failed!${NC}"
-    exit 1
-fi
-
-# Step 5: Install dependencies and start server
-echo -e "\n${YELLOW}[Step 5/5] Installing dependencies & starting server...${NC}\n"
-
-npm install
-
-echo -e "\n${GREEN}=============================================="
-echo "   Setup Complete!"
-echo "==============================================${NC}"
-echo ""
-echo -e "Starting server... The browser will open automatically."
-echo -e "Press ${RED}Ctrl+C${NC} to stop the server."
-echo ""
-
-# Detect OS and open browser
-sleep 2 &
-(sleep 3 &&
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        open "$(pwd)/public/index.html"
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}Database initialized successfully!${NC}"
     else
-        xdg-open "$(pwd)/public/index.html" 2>/dev/null || echo "Please open public/index.html in your browser"
+        echo -e "${RED}Database initialization failed!${NC}"
+        exit 1
+    fi
+fi
+
+# Install dependencies if needed
+if [ ! -d "node_modules" ]; then
+    echo -e "\n${YELLOW}[Step 4] Installing dependencies...${NC}"
+    npm install
+fi
+
+echo -e "\n${BLUE}=============================================="
+echo "   Starting Server"
+echo -e "==============================================${NC}\n"
+echo -e "Server will start at: ${GREEN}http://localhost:3000${NC}"
+echo -e "Press ${RED}Ctrl+C${NC} to stop the server.\n"
+
+# Try to open browser
+sleep 2 &
+(sleep 2 &&
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        open "http://localhost:3000" 2>/dev/null
+    else
+        xdg-open "http://localhost:3000" 2>/dev/null
     fi
 ) &
+
+if [ $? -ne 0 ]; then
+    echo -e "${YELLOW}[INFO]${NC} Could not open browser automatically."
+    echo "       Please open http://localhost:3000 manually."
+    echo ""
+fi
 
 npm start

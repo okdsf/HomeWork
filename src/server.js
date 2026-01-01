@@ -145,7 +145,7 @@ app.post('/api/customers', async (req, res) => {
     try {
         const sql = 'INSERT INTO Customers (first_name, last_name, gender) VALUES (?, ?, ?)';
         const [result] = await db.query(sql, [first_name, last_name, gender]);
-        
+
         const newCustomer = {
             customer_id: result.insertId,
             first_name,
@@ -157,6 +157,39 @@ app.post('/api/customers', async (req, res) => {
     } catch (error) {
         console.error('Error adding new customer:', error);
         res.status(500).json({ message: 'Failed to add new customer.' });
+    }
+});
+
+// 修改忠实客户信息
+app.put('/api/customers/:id', async (req, res) => {
+    const { id } = req.params;
+    const { first_name, last_name, gender } = req.body;
+
+    if (!first_name || !last_name || !gender) {
+        return res.status(400).json({ message: 'Missing required fields: first_name, last_name, gender.' });
+    }
+
+    try {
+        // 首先检查客户是否存在
+        const [existing] = await db.query('SELECT * FROM Customers WHERE customer_id = ?', [id]);
+        if (existing.length === 0) {
+            return res.status(404).json({ message: 'Customer not found.' });
+        }
+
+        const sql = 'UPDATE Customers SET first_name = ?, last_name = ?, gender = ? WHERE customer_id = ?';
+        await db.query(sql, [first_name, last_name, gender, id]);
+
+        const updatedCustomer = {
+            customer_id: parseInt(id),
+            first_name,
+            last_name,
+            gender
+        };
+        res.status(200).json(updatedCustomer);
+
+    } catch (error) {
+        console.error('Error updating customer:', error);
+        res.status(500).json({ message: 'Failed to update customer.' });
     }
 });
 
@@ -243,6 +276,42 @@ app.post('/api/sales', async (req, res) => {
     } finally {
         // --- 无论成功还是失败, 最后都要释放连接 ---
         connection.release();
+    }
+});
+
+// =================================================================
+// 销售历史 API
+// =================================================================
+
+// 获取最近的销售历史记录
+app.get('/api/sales/history', async (req, res) => {
+    const limit = parseInt(req.query.limit) || 20; // 默认返回最近20条
+
+    try {
+        const sql = `
+            SELECT
+                s.sale_id,
+                s.sale_date,
+                p.name AS product_name,
+                si.quantity_sold,
+                si.price_at_sale,
+                si.vat_at_sale,
+                (si.price_at_sale * (1 + si.vat_at_sale) * si.quantity_sold) AS total_price_ttc,
+                CONCAT(c.first_name, ' ', c.last_name) AS customer_name
+            FROM Sales s
+            JOIN Sale_Items si ON s.sale_id = si.sale_id
+            JOIN Products p ON si.product_id = p.product_id
+            LEFT JOIN Customers c ON s.customer_id = c.customer_id
+            ORDER BY s.sale_date DESC, s.sale_id DESC
+            LIMIT ?;
+        `;
+
+        const [historyData] = await db.query(sql, [limit]);
+        res.status(200).json(historyData);
+
+    } catch (error) {
+        console.error('Error fetching sales history:', error);
+        res.status(500).json({ message: 'Failed to fetch sales history.' });
     }
 });
 

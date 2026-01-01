@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n-key="page.title">Farm Store Dashboard</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Flatpickr for internationalized date picker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
 </head>
 
 <body>
@@ -117,7 +121,15 @@
                 </form>
             </div>
 
-            <!-- 卡片四：销售业绩速览 -->
+            <!-- 卡片四：销售历史记录 -->
+            <div class="card">
+                <h2 data-i18n-key="sales_history.title">📜 Recent Sales History</h2>
+                <div id="sales-history-list">
+                    <!-- 销售历史将显示在这里 -->
+                </div>
+            </div>
+
+            <!-- 卡片五：销售业绩速览 -->
             <div class="card">
                 <h2 data-i18n-key="sales_report.title">📊 Sales Snapshot</h2>
                 <div id="sales-report">
@@ -138,6 +150,28 @@
 
         </div>
     </main>
+
+    <!-- 编辑客户模态框 -->
+    <div id="edit-customer-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="close-edit-modal">&times;</span>
+            <h3 data-i18n-key="customer_management.edit_title">Edit Customer</h3>
+            <form id="edit-customer-form">
+                <input type="hidden" id="edit-customer-id">
+                <input type="text" id="edit-customer-firstname"
+                    data-i18n-placeholder="customer_management.form.firstname_placeholder" placeholder="First Name"
+                    required>
+                <input type="text" id="edit-customer-lastname"
+                    data-i18n-placeholder="customer_management.form.lastname_placeholder" placeholder="Last Name"
+                    required>
+                <select id="edit-customer-gender" required class="styled-select">
+                    <option value="Male" data-i18n-key="customer_management.gender.male">Male</option>
+                    <option value="Female" data-i18n-key="customer_management.gender.female">Female</option>
+                </select>
+                <button type="submit" data-i18n-key="customer_management.form.save_button">Save Changes</button>
+            </form>
+        </div>
+    </div>
 
     <!-- 引入JavaScript文件 -->
     <script src="script.js"></script>

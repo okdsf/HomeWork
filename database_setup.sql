@@ -64,7 +64,8 @@ INSERT INTO Products (name, unit_price_ht, stock_quantity) VALUES
 ('Yaourt Nature (x4)', 2.80, 80),
 ('Fromage Blanc (500g)', 3.50, 60),
 ('Saucisson Sec', 9.90, 70),
-('Confiture de Fraises', 4.50, 90);
+('Confiture de Fraises', 4.50, 90),
+('Oeufs (x12)', 3.20, 120);
 
 -- --- 填充 Customers 表 ---
 INSERT INTO Customers (first_name, last_name, gender) VALUES

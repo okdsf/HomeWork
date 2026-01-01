@@ -15,6 +15,10 @@ let customersData = [];
 // 当前语言状态
 let currentLang = 'en';
 
+// Flatpickr 实例
+let startDatePicker = null;
+let endDatePicker = null;
+
 // ================================================================
 // 国际化字典
 // ================================================================
@@ -38,11 +42,16 @@ const translations = {
         
         // Customer Management
         "customer_management.title": "👥 Loyal Customer Management",
+        "customer_management.edit_title": "Edit Customer",
         "customer_management.form.firstname_placeholder": "First Name",
         "customer_management.form.lastname_placeholder": "Last Name",
         "customer_management.gender.male": "Male",
         "customer_management.gender.female": "Female",
         "customer_management.form.submit_button": "Add Customer",
+        "customer_management.form.save_button": "Save Changes",
+        "tooltip.edit_customer": "Edit",
+        "alert.customer_update_success": "Customer updated successfully!",
+        "alert.customer_update_fail": "Failed to update customer: ",
         
         // Sales Entry
         "sales_entry.title": "🛒 Record a Sale",
@@ -92,7 +101,12 @@ const translations = {
         "report.period": "From {start} to {end}",
         "report.total_revenue": "Total Revenue: €{amount}",
         "report.sale_item": "{date} - {product} x {quantity} (Sold to: {customer})",
-        "report.no_sales": "No sales records for this period."
+        "report.no_sales": "No sales records for this period.",
+
+        // Sales History
+        "sales_history.title": "📜 Recent Sales History",
+        "sales_history.empty": "No sales records yet.",
+        "sales_history.item": "{date} | {product} x {quantity} | €{price} | {customer}"
     },
     zh: {
         // Header
@@ -112,11 +126,16 @@ const translations = {
         
         // Customer Management
         "customer_management.title": "👥 忠实客户管理",
+        "customer_management.edit_title": "编辑客户",
         "customer_management.form.firstname_placeholder": "名",
         "customer_management.form.lastname_placeholder": "姓",
         "customer_management.gender.male": "男",
         "customer_management.gender.female": "女",
         "customer_management.form.submit_button": "添加客户",
+        "customer_management.form.save_button": "保存修改",
+        "tooltip.edit_customer": "编辑",
+        "alert.customer_update_success": "客户信息更新成功!",
+        "alert.customer_update_fail": "更新客户失败: ",
         
         // Sales Entry
         "sales_entry.title": "🛒 销售录入",
@@ -166,7 +185,12 @@ const translations = {
         "report.period": "从 {start} 到 {end}",
         "report.total_revenue": "总销售额: €{amount}",
         "report.sale_item": "{date} - {product} x {quantity} (售给: {customer})",
-        "report.no_sales": "该时间段内无销售记录。"
+        "report.no_sales": "该时间段内无销售记录。",
+
+        // Sales History
+        "sales_history.title": "📜 最近销售记录",
+        "sales_history.empty": "暂无销售记录。",
+        "sales_history.item": "{date} | {product} x {quantity} | €{price} | {customer}"
     }
 };
 
@@ -214,12 +238,15 @@ function setLanguage(lang) {
     
     // 特殊处理：更新总计显示
     updateTotalPrice();
-    
+
     // 更新散客选项
     updateWalkInCustomerOption();
-    
+
     // 更新动态内容
     updateDynamicContent();
+
+    // 更新日期选择器语言
+    updateDatePickersLocale();
 }
 
 /**
@@ -247,6 +274,56 @@ function getLocalizedText(key, params = {}) {
     });
     
     return text;
+}
+
+/**
+ * 初始化 Flatpickr 日期选择器
+ */
+function initializeDatePickers() {
+    const locale = currentLang === 'zh' ? 'zh' : 'default';
+
+    const config = {
+        locale: locale,
+        dateFormat: 'Y-m-d',
+        allowInput: true
+    };
+
+    // 初始化开始日期选择器
+    if (startDatePicker) {
+        startDatePicker.destroy();
+    }
+    startDatePicker = flatpickr('#start-date', config);
+
+    // 初始化结束日期选择器
+    if (endDatePicker) {
+        endDatePicker.destroy();
+    }
+    endDatePicker = flatpickr('#end-date', config);
+}
+
+/**
+ * 更新 Flatpickr 日期选择器的语言
+ */
+function updateDatePickersLocale() {
+    const locale = currentLang === 'zh' ? 'zh' : 'default';
+
+    if (startDatePicker) {
+        startDatePicker.destroy();
+        startDatePicker = flatpickr('#start-date', {
+            locale: locale,
+            dateFormat: 'Y-m-d',
+            allowInput: true
+        });
+    }
+
+    if (endDatePicker) {
+        endDatePicker.destroy();
+        endDatePicker = flatpickr('#end-date', {
+            locale: locale,
+            dateFormat: 'Y-m-d',
+            allowInput: true
+        });
+    }
 }
 
 /**
@@ -308,13 +385,17 @@ document.addEventListener('DOMContentLoaded', () => {
  * 初始化应用
  */
 function initializeApp() {
+    // 初始化日期选择器
+    initializeDatePickers();
+
     // 设置语言（默认英语）
     setLanguage('en');
-    
+
     // 获取所有必要的数据
     fetchProducts();
     fetchCustomers();
-    
+    fetchSalesHistory();
+
     // 设置表单提交的事件监听器
     setupEventListeners();
 }
@@ -328,13 +409,35 @@ function setupEventListeners() {
     if (addProductForm) {
         addProductForm.addEventListener('submit', handleAddProduct);
     }
-    
+
     // 添加客户表单
     const addCustomerForm = document.getElementById('add-customer-form');
     if (addCustomerForm) {
         addCustomerForm.addEventListener('submit', handleAddCustomer);
     }
-    
+
+    // 编辑客户表单
+    const editCustomerForm = document.getElementById('edit-customer-form');
+    if (editCustomerForm) {
+        editCustomerForm.addEventListener('submit', handleEditCustomer);
+    }
+
+    // 关闭编辑客户模态框
+    const closeEditModal = document.getElementById('close-edit-modal');
+    if (closeEditModal) {
+        closeEditModal.addEventListener('click', closeEditCustomerModal);
+    }
+
+    // 点击模态框外部关闭
+    const editModal = document.getElementById('edit-customer-modal');
+    if (editModal) {
+        editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) {
+                closeEditCustomerModal();
+            }
+        });
+    }
+
     // 添加到购物车按钮
     const addToCartBtn = document.getElementById('add-to-cart-btn');
     if (addToCartBtn) {
@@ -573,9 +676,9 @@ async function fetchCustomers() {
 function renderCustomerList(customers) {
     const list = document.getElementById('customer-list');
     if (!list) return;
-    
+
     list.innerHTML = '';
-    
+
     if (customers.length === 0) {
         list.innerHTML = `
             <li class="empty-state">
@@ -584,18 +687,33 @@ function renderCustomerList(customers) {
         `;
         return;
     }
-    
+
     customers.forEach(customer => {
         const listItem = document.createElement('li');
         let genderDisplay = '';
-        
+
         if (currentLang === 'zh') {
             genderDisplay = customer.gender === 'Male' ? '男' : '女';
         } else {
             genderDisplay = customer.gender;
         }
-        
-        listItem.textContent = `${customer.last_name} ${customer.first_name} (${genderDisplay})`;
+
+        // 创建客户信息文本
+        const customerInfo = document.createElement('span');
+        customerInfo.textContent = `${customer.last_name} ${customer.first_name} (${genderDisplay})`;
+        listItem.appendChild(customerInfo);
+
+        // 创建编辑按钮
+        const editBtn = document.createElement('button');
+        editBtn.className = 'edit-customer-btn';
+        editBtn.textContent = getLocalizedText('tooltip.edit_customer');
+        editBtn.dataset.customerId = customer.customer_id;
+        editBtn.dataset.firstName = customer.first_name;
+        editBtn.dataset.lastName = customer.last_name;
+        editBtn.dataset.gender = customer.gender;
+        editBtn.addEventListener('click', openEditCustomerModal);
+        listItem.appendChild(editBtn);
+
         list.appendChild(listItem);
     });
 }
@@ -637,6 +755,75 @@ async function handleAddCustomer(event) {
     } catch (error) {
         console.error('Error adding customer:', error);
         showLocalizedAlert('alert.customer_add_fail', error.message);
+    }
+}
+
+/**
+ * 打开编辑客户的模态框
+ * @param {Event} event - 点击事件
+ */
+function openEditCustomerModal(event) {
+    const btn = event.target;
+    const modal = document.getElementById('edit-customer-modal');
+
+    // 填充表单数据
+    document.getElementById('edit-customer-id').value = btn.dataset.customerId;
+    document.getElementById('edit-customer-firstname').value = btn.dataset.firstName;
+    document.getElementById('edit-customer-lastname').value = btn.dataset.lastName;
+    document.getElementById('edit-customer-gender').value = btn.dataset.gender;
+
+    // 显示模态框
+    modal.classList.add('show');
+}
+
+/**
+ * 关闭编辑客户的模态框
+ */
+function closeEditCustomerModal() {
+    const modal = document.getElementById('edit-customer-modal');
+    modal.classList.remove('show');
+    document.getElementById('edit-customer-form').reset();
+}
+
+/**
+ * 处理编辑客户的表单提交
+ * @param {Event} event - 表单提交事件
+ */
+async function handleEditCustomer(event) {
+    event.preventDefault();
+
+    const customerId = document.getElementById('edit-customer-id').value;
+    const firstName = document.getElementById('edit-customer-firstname').value;
+    const lastName = document.getElementById('edit-customer-lastname').value;
+    const gender = document.getElementById('edit-customer-gender').value;
+
+    const customerData = {
+        first_name: firstName,
+        last_name: lastName,
+        gender: gender
+    };
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/customers/${customerId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(customerData)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to update customer');
+        }
+
+        closeEditCustomerModal();
+        fetchCustomers();
+        showLocalizedAlert('alert.customer_update_success');
+    } catch (error) {
+        console.error('Error updating customer:', error);
+        showLocalizedAlert('alert.customer_update_fail', error.message);
     }
 }
 
@@ -801,16 +988,17 @@ async function handleRecordSale(event) {
         }
 
         showLocalizedAlert('alert.sale_success');
-        
+
         // 重置销售区域
         cart = [];
         renderCart();
         updateTotalPrice();
         document.getElementById('record-sale-form').reset();
-        
+
         // 刷新产品列表以更新库存
         fetchProducts();
-        fetchCustomers(); // 刷新客户列表
+        fetchCustomers();
+        fetchSalesHistory(); // 刷新销售历史
 
     } catch (error) {
         console.error('Error recording sale:', error);
@@ -898,6 +1086,60 @@ function displayReportResult(result, startDate, endDate) {
     }
     
     resultDiv.innerHTML = reportHTML;
+}
+
+// ================================================================
+// 销售历史功能
+// ================================================================
+
+/**
+ * 从API获取销售历史
+ */
+async function fetchSalesHistory() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/sales/history?limit=15`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const historyData = await response.json();
+        renderSalesHistory(historyData);
+    } catch (error) {
+        console.error('Error fetching sales history:', error);
+        // 静默失败，不显示警告
+    }
+}
+
+/**
+ * 渲染销售历史列表
+ * @param {Array} historyData - 销售历史数据
+ */
+function renderSalesHistory(historyData) {
+    const listDiv = document.getElementById('sales-history-list');
+    if (!listDiv) return;
+
+    if (!historyData || historyData.length === 0) {
+        listDiv.innerHTML = `<p class="empty-state">${getLocalizedText('sales_history.empty')}</p>`;
+        return;
+    }
+
+    let html = '<ul class="sales-history-ul">';
+    historyData.forEach(item => {
+        const date = new Date(item.sale_date).toLocaleDateString();
+        const customer = item.customer_name || getLocalizedText('sales_entry.form.walk_in_customer');
+        const price = parseFloat(item.total_price_ttc).toFixed(2);
+
+        html += `
+            <li>
+                <span class="history-date">${date}</span>
+                <span class="history-product">${item.product_name} x ${item.quantity_sold}</span>
+                <span class="history-price">€${price}</span>
+                <span class="history-customer">${customer}</span>
+            </li>
+        `;
+    });
+    html += '</ul>';
+
+    listDiv.innerHTML = html;
 }
 
 // ================================================================

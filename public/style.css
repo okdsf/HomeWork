@@ -752,3 +752,181 @@ button:disabled:hover {
     transform: none !important;
     box-shadow: 0 6px 16px rgba(110, 193, 228, 0.3);
 }
+
+/* ===== 模态框样式 ===== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-content h3 {
+    font-size: 1.5rem;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--primary-light);
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: var(--transition);
+    line-height: 1;
+}
+
+.modal-close:hover {
+    color: var(--danger-color);
+    transform: rotate(90deg);
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.modal-content form input,
+.modal-content form select {
+    width: 100%;
+}
+
+.modal-content form button {
+    margin-top: 1rem;
+    width: 100%;
+}
+
+/* ===== 客户列表编辑按钮 ===== */
+#customer-list .edit-customer-btn {
+    background: linear-gradient(135deg, var(--primary-color), #8EC5FC);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 2px 6px rgba(110, 193, 228, 0.3);
+}
+
+#customer-list .edit-customer-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(110, 193, 228, 0.4);
+}
+
+/* ===== 销售历史列表样式 ===== */
+.sales-history-ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.sales-history-ul li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.8rem 1rem;
+    margin: 0.5rem 0;
+    background: var(--primary-light);
+    border-radius: 10px;
+    border-left: 3px solid var(--primary-color);
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.sales-history-ul li:hover {
+    background: #d9efff;
+    transform: translateX(4px);
+}
+
+.sales-history-ul .history-date {
+    color: var(--text-light);
+    font-weight: 600;
+    min-width: 80px;
+}
+
+.sales-history-ul .history-product {
+    flex: 1;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.sales-history-ul .history-price {
+    color: var(--success-color);
+    font-weight: 700;
+    min-width: 70px;
+    text-align: right;
+}
+
+.sales-history-ul .history-customer {
+    color: var(--primary-color);
+    font-style: italic;
+    min-width: 100px;
+    text-align: right;
+}
+
+#sales-history-list .empty-state {
+    padding: 2rem;
+}
+
+@media (max-width: 768px) {
+    .sales-history-ul li {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .sales-history-ul .history-price,
+    .sales-history-ul .history-customer {
+        text-align: left;
+    }
+}
