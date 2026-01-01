@@ -10,14 +10,17 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
 </head>
 
 <body>
     <header>
         <h1 data-i18n-key="header.title">Farm Store Dashboard</h1>
+        <button id="show-er-diagram-btn" class="er-btn" data-i18n-key="er_diagram.button">View ER Diagram</button>
         <div class="language-switcher">
             <button id="lang-en" class="lang-btn active">English</button>
             <button id="lang-zh" class="lang-btn">中文</button>
+            <button id="lang-fr" class="lang-btn">Français</button>
         </div>
     </header>
 
@@ -170,6 +173,126 @@
                 </select>
                 <button type="submit" data-i18n-key="customer_management.form.save_button">Save Changes</button>
             </form>
+        </div>
+    </div>
+
+    <!-- ER图模态框 -->
+    <div id="er-diagram-modal" class="modal">
+        <div class="modal-content er-modal-content">
+            <span class="modal-close" id="close-er-modal">&times;</span>
+            <h3 data-i18n-key="er_diagram.title">Entity-Relationship Diagram</h3>
+            <div id="er-diagram-container">
+                <svg viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; height: auto;">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#6EC1E4"/>
+                        </marker>
+                        <marker id="crow-foot" markerWidth="12" markerHeight="12" refX="0" refY="6" orient="auto">
+                            <path d="M0,6 L12,0 M0,6 L12,6 M0,6 L12,12" stroke="#6EC1E4" stroke-width="2" fill="none"/>
+                        </marker>
+                        <linearGradient id="headerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#6EC1E4"/>
+                            <stop offset="100%" style="stop-color:#4A90E2"/>
+                        </linearGradient>
+                    </defs>
+
+                    <!-- Products Table -->
+                    <g transform="translate(30, 20)">
+                        <rect x="0" y="0" width="170" height="150" rx="8" fill="white" stroke="#6EC1E4" stroke-width="2"/>
+                        <rect x="0" y="0" width="170" height="32" rx="8" fill="url(#headerGrad)"/>
+                        <rect x="0" y="24" width="170" height="8" fill="url(#headerGrad)"/>
+                        <text x="85" y="22" text-anchor="middle" fill="white" font-weight="bold" font-size="14">Products</text>
+                        <text x="10" y="52" font-size="11" fill="#2C3E50"><tspan fill="#51CF66" font-weight="bold">PK</tspan> product_id INT</text>
+                        <text x="10" y="72" font-size="11" fill="#2C3E50">name VARCHAR</text>
+                        <text x="10" y="92" font-size="11" fill="#2C3E50">unit_price_ht DECIMAL</text>
+                        <text x="10" y="112" font-size="11" fill="#2C3E50">vat_rate DECIMAL</text>
+                        <text x="10" y="132" font-size="11" fill="#2C3E50">stock_quantity INT</text>
+                    </g>
+
+                    <!-- Customers Table -->
+                    <g transform="translate(30, 280)">
+                        <rect x="0" y="0" width="170" height="130" rx="8" fill="white" stroke="#6EC1E4" stroke-width="2"/>
+                        <rect x="0" y="0" width="170" height="32" rx="8" fill="url(#headerGrad)"/>
+                        <rect x="0" y="24" width="170" height="8" fill="url(#headerGrad)"/>
+                        <text x="85" y="22" text-anchor="middle" fill="white" font-weight="bold" font-size="14">Customers</text>
+                        <text x="10" y="52" font-size="11" fill="#2C3E50"><tspan fill="#51CF66" font-weight="bold">PK</tspan> customer_id INT</text>
+                        <text x="10" y="72" font-size="11" fill="#2C3E50">first_name VARCHAR</text>
+                        <text x="10" y="92" font-size="11" fill="#2C3E50">last_name VARCHAR</text>
+                        <text x="10" y="112" font-size="11" fill="#2C3E50">gender ENUM</text>
+                    </g>
+
+                    <!-- Sales Table -->
+                    <g transform="translate(315, 280)">
+                        <rect x="0" y="0" width="170" height="110" rx="8" fill="white" stroke="#6EC1E4" stroke-width="2"/>
+                        <rect x="0" y="0" width="170" height="32" rx="8" fill="url(#headerGrad)"/>
+                        <rect x="0" y="24" width="170" height="8" fill="url(#headerGrad)"/>
+                        <text x="85" y="22" text-anchor="middle" fill="white" font-weight="bold" font-size="14">Sales</text>
+                        <text x="10" y="52" font-size="11" fill="#2C3E50"><tspan fill="#51CF66" font-weight="bold">PK</tspan> sale_id INT</text>
+                        <text x="10" y="72" font-size="11" fill="#2C3E50">sale_date DATETIME</text>
+                        <text x="10" y="92" font-size="11" fill="#2C3E50"><tspan fill="#6EC1E4" font-weight="bold">FK</tspan> customer_id INT</text>
+                    </g>
+
+                    <!-- Sale_Items Table -->
+                    <g transform="translate(600, 140)">
+                        <rect x="0" y="0" width="170" height="170" rx="8" fill="white" stroke="#6EC1E4" stroke-width="2"/>
+                        <rect x="0" y="0" width="170" height="32" rx="8" fill="url(#headerGrad)"/>
+                        <rect x="0" y="24" width="170" height="8" fill="url(#headerGrad)"/>
+                        <text x="85" y="22" text-anchor="middle" fill="white" font-weight="bold" font-size="14">Sale_Items</text>
+                        <text x="10" y="52" font-size="11" fill="#2C3E50"><tspan fill="#51CF66" font-weight="bold">PK</tspan> sale_item_id INT</text>
+                        <text x="10" y="72" font-size="11" fill="#2C3E50"><tspan fill="#6EC1E4" font-weight="bold">FK</tspan> sale_id INT</text>
+                        <text x="10" y="92" font-size="11" fill="#2C3E50"><tspan fill="#6EC1E4" font-weight="bold">FK</tspan> product_id INT</text>
+                        <text x="10" y="112" font-size="11" fill="#2C3E50">quantity_sold INT</text>
+                        <text x="10" y="132" font-size="11" fill="#2C3E50">price_at_sale DECIMAL</text>
+                        <text x="10" y="152" font-size="11" fill="#2C3E50">vat_at_sale DECIMAL</text>
+                    </g>
+
+                    <!-- Relationship Lines -->
+                    <!-- Customers -> Sales (1:N) -->
+                    <line x1="200" y1="345" x2="315" y2="345" stroke="#95D475" stroke-width="2"/>
+                    <circle cx="200" cy="345" r="4" fill="#95D475"/>
+                    <text x="208" y="342" font-size="10" fill="#95D475">1</text>
+                    <text x="295" y="342" font-size="10" fill="#95D475">N</text>
+                    <path d="M305,340 L315,345 L305,350" stroke="#95D475" stroke-width="2" fill="none"/>
+                    <text x="245" y="335" font-size="9" fill="#7F8C8D" font-style="italic">places</text>
+
+                    <!-- Sales -> Sale_Items (1:N) -->
+                    <path d="M485,335 Q540,335 540,270 Q540,225 600,225" stroke="#95D475" stroke-width="2" fill="none"/>
+                    <circle cx="485" cy="335" r="4" fill="#95D475"/>
+                    <text x="492" y="332" font-size="10" fill="#95D475">1</text>
+                    <text x="580" y="222" font-size="10" fill="#95D475">N</text>
+                    <path d="M590,220 L600,225 L590,230" stroke="#95D475" stroke-width="2" fill="none"/>
+                    <text x="525" y="280" font-size="9" fill="#7F8C8D" font-style="italic">contains</text>
+
+                    <!-- Products -> Sale_Items (1:N) -->
+                    <path d="M200,95 Q400,95 400,180 Q400,225 600,225" stroke="#95D475" stroke-width="2" fill="none"/>
+                    <circle cx="200" cy="95" r="4" fill="#95D475"/>
+                    <text x="208" y="92" font-size="10" fill="#95D475">1</text>
+                    <text x="580" y="232" font-size="10" fill="#95D475">N</text>
+                    <path d="M590,230 L600,225 L590,220" stroke="#95D475" stroke-width="2" fill="none"/>
+                    <text x="380" y="165" font-size="9" fill="#7F8C8D" font-style="italic">includes</text>
+
+                    <!-- Legend in SVG -->
+                    <g transform="translate(280, 450)">
+                        <text x="0" y="15" font-size="11" fill="#2C3E50" font-weight="bold">Relationships:</text>
+                        <circle cx="110" cy="12" r="3" fill="#95D475"/>
+                        <line x1="113" y1="12" x2="140" y2="12" stroke="#95D475" stroke-width="2"/>
+                        <text x="145" y="16" font-size="10" fill="#7F8C8D">1</text>
+                        <text x="160" y="15" font-size="10" fill="#2C3E50">One</text>
+                        <path d="M200,7 L210,12 L200,17" stroke="#95D475" stroke-width="2" fill="none"/>
+                        <text x="215" y="16" font-size="10" fill="#7F8C8D">N</text>
+                        <text x="230" y="15" font-size="10" fill="#2C3E50">Many</text>
+                    </g>
+                </svg>
+            </div>
+            <div class="er-legend">
+                <p data-i18n-key="er_diagram.legend_title"><strong>Legend:</strong></p>
+                <ul>
+                    <li><span class="legend-pk">PK</span> - <span data-i18n-key="er_diagram.legend_pk">Primary Key</span></li>
+                    <li><span class="legend-fk">FK</span> - <span data-i18n-key="er_diagram.legend_fk">Foreign Key</span></li>
+                    <li><code>||--o{</code> - <span data-i18n-key="er_diagram.legend_one_many">One to Many (optional)</span></li>
+                    <li><code>||--|{</code> - <span data-i18n-key="er_diagram.legend_one_many_required">One to Many (required)</span></li>
+                </ul>
+            </div>
         </div>
     </div>
 

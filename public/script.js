@@ -106,7 +106,16 @@ const translations = {
         // Sales History
         "sales_history.title": "📜 Recent Sales History",
         "sales_history.empty": "No sales records yet.",
-        "sales_history.item": "{date} | {product} x {quantity} | €{price} | {customer}"
+        "sales_history.item": "{date} | {product} x {quantity} | €{price} | {customer}",
+
+        // ER Diagram
+        "er_diagram.button": "View ER Diagram",
+        "er_diagram.title": "Entity-Relationship Diagram",
+        "er_diagram.legend_title": "Legend:",
+        "er_diagram.legend_pk": "Primary Key",
+        "er_diagram.legend_fk": "Foreign Key",
+        "er_diagram.legend_one_many": "One to Many (optional)",
+        "er_diagram.legend_one_many_required": "One to Many (required)"
     },
     zh: {
         // Header
@@ -190,7 +199,109 @@ const translations = {
         // Sales History
         "sales_history.title": "📜 最近销售记录",
         "sales_history.empty": "暂无销售记录。",
-        "sales_history.item": "{date} | {product} x {quantity} | €{price} | {customer}"
+        "sales_history.item": "{date} | {product} x {quantity} | €{price} | {customer}",
+
+        // ER Diagram
+        "er_diagram.button": "查看ER图",
+        "er_diagram.title": "实体关系图 (ER Diagram)",
+        "er_diagram.legend_title": "图例说明:",
+        "er_diagram.legend_pk": "主键",
+        "er_diagram.legend_fk": "外键",
+        "er_diagram.legend_one_many": "一对多 (可选)",
+        "er_diagram.legend_one_many_required": "一对多 (必须)"
+    },
+    fr: {
+        // Header
+        "header.title": "Tableau de Bord - Magasin Fermier",
+
+        // Product Management
+        "product_management.title": "🗂️ Gestion des Produits & Stock",
+        "product_table.headers.name": "Nom du Produit",
+        "product_table.headers.price": "Prix (HT)",
+        "product_table.headers.stock": "Stock",
+        "product_table.headers.actions": "Actions",
+        "product_management.add_section.summary": "► Cliquez pour ajouter un produit",
+        "product_management.form.name_placeholder": "Nom du Produit",
+        "product_management.form.price_placeholder": "Prix (HT)",
+        "product_management.form.stock_placeholder": "Stock Initial",
+        "product_management.form.submit_button": "Confirmer",
+
+        // Customer Management
+        "customer_management.title": "👥 Gestion des Clients Fidèles",
+        "customer_management.edit_title": "Modifier le Client",
+        "customer_management.form.firstname_placeholder": "Prénom",
+        "customer_management.form.lastname_placeholder": "Nom",
+        "customer_management.gender.male": "Homme",
+        "customer_management.gender.female": "Femme",
+        "customer_management.form.submit_button": "Ajouter Client",
+        "customer_management.form.save_button": "Enregistrer",
+        "tooltip.edit_customer": "Modifier",
+        "alert.customer_update_success": "Client mis à jour avec succès !",
+        "alert.customer_update_fail": "Échec de la mise à jour : ",
+
+        // Sales Entry
+        "sales_entry.title": "🛒 Enregistrer une Vente",
+        "sales_entry.form.product_label": "Produit :",
+        "sales_entry.form.quantity_label": "Quantité :",
+        "sales_entry.form.add_to_cart_button": "Ajouter à la Liste",
+        "sales_entry.cart_title": "Liste de Vente Actuelle",
+        "sales_entry.form.customer_label": "Client (Optionnel) :",
+        "sales_entry.form.walk_in_customer": "— Client de Passage —",
+        "sales_entry.total_price": "Total : €0.00",
+        "sales_entry.form.confirm_sale_button": "✓ Confirmer la Vente",
+
+        // Sales Report
+        "sales_report.title": "📊 Aperçu des Ventes",
+        "sales_report.form.start_date_label": "Date de Début :",
+        "sales_report.form.end_date_label": "Date de Fin :",
+        "sales_report.form.generate_button": "Rechercher",
+
+        // Alerts and Messages
+        "alert.product_load_fail": "Impossible de charger les produits. Vérifiez si le serveur fonctionne.",
+        "alert.product_add_success": "Produit ajouté avec succès !",
+        "alert.product_add_fail": "Échec de l'ajout : ",
+        "alert.stock_update_fail": "Échec de la mise à jour du stock : ",
+        "alert.customer_load_fail": "Impossible de charger les clients.",
+        "alert.customer_add_success": "Client ajouté avec succès !",
+        "alert.customer_add_fail": "Échec de l'ajout du client : ",
+        "alert.invalid_quantity": "Veuillez sélectionner un produit et entrer une quantité valide.",
+        "alert.cart_empty": "La liste de vente ne peut pas être vide !",
+        "alert.sale_success": "Vente enregistrée avec succès !",
+        "alert.sale_fail": "Échec de l'enregistrement : ",
+        "alert.select_dates": "Veuillez sélectionner une date de début et de fin.",
+        "alert.report_fail": "Échec de la génération du rapport.",
+        "alert.no_products": "Aucun produit disponible.",
+        "alert.server_error": "Erreur serveur. Veuillez réessayer.",
+
+        // Empty States
+        "empty.product_table": "Aucun produit disponible",
+        "empty.customer_list": "Aucun client trouvé",
+        "empty.cart": "Panier vide",
+
+        // Tooltips
+        "tooltip.increase_stock": "Augmenter le stock",
+        "tooltip.decrease_stock": "Diminuer le stock",
+        "tooltip.remove_item": "Supprimer",
+
+        // Report
+        "report.period": "Du {start} au {end}",
+        "report.total_revenue": "Chiffre d'Affaires Total : €{amount}",
+        "report.sale_item": "{date} - {product} x {quantity} (Vendu à : {customer})",
+        "report.no_sales": "Aucune vente pour cette période.",
+
+        // Sales History
+        "sales_history.title": "📜 Historique des Ventes Récentes",
+        "sales_history.empty": "Aucun historique de vente.",
+        "sales_history.item": "{date} | {product} x {quantity} | €{price} | {customer}",
+
+        // ER Diagram
+        "er_diagram.button": "Voir le Diagramme ER",
+        "er_diagram.title": "Diagramme Entité-Relation",
+        "er_diagram.legend_title": "Légende :",
+        "er_diagram.legend_pk": "Clé Primaire",
+        "er_diagram.legend_fk": "Clé Étrangère",
+        "er_diagram.legend_one_many": "Un à Plusieurs (optionnel)",
+        "er_diagram.legend_one_many_required": "Un à Plusieurs (obligatoire)"
     }
 };
 
@@ -280,7 +391,8 @@ function getLocalizedText(key, params = {}) {
  * 初始化 Flatpickr 日期选择器
  */
 function initializeDatePickers() {
-    const locale = currentLang === 'zh' ? 'zh' : 'default';
+    const localeMap = { zh: 'zh', fr: 'fr', en: 'default' };
+    const locale = localeMap[currentLang] || 'default';
 
     const config = {
         locale: locale,
@@ -305,7 +417,8 @@ function initializeDatePickers() {
  * 更新 Flatpickr 日期选择器的语言
  */
 function updateDatePickersLocale() {
-    const locale = currentLang === 'zh' ? 'zh' : 'default';
+    const localeMap = { zh: 'zh', fr: 'fr', en: 'default' };
+    const locale = localeMap[currentLang] || 'default';
 
     if (startDatePicker) {
         startDatePicker.destroy();
@@ -376,6 +489,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 初始化语言切换按钮事件
     document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
     document.getElementById('lang-zh').addEventListener('click', () => setLanguage('zh'));
+    document.getElementById('lang-fr').addEventListener('click', () => setLanguage('fr'));
     
     // 初始化应用
     initializeApp();
@@ -454,6 +568,28 @@ function setupEventListeners() {
     const generateReportBtn = document.getElementById('generate-report-btn');
     if (generateReportBtn) {
         generateReportBtn.addEventListener('click', handleGenerateReport);
+    }
+
+    // ER图按钮
+    const showErDiagramBtn = document.getElementById('show-er-diagram-btn');
+    if (showErDiagramBtn) {
+        showErDiagramBtn.addEventListener('click', openErDiagramModal);
+    }
+
+    // 关闭ER图模态框
+    const closeErModal = document.getElementById('close-er-modal');
+    if (closeErModal) {
+        closeErModal.addEventListener('click', closeErDiagramModal);
+    }
+
+    // 点击ER模态框外部关闭
+    const erModal = document.getElementById('er-diagram-modal');
+    if (erModal) {
+        erModal.addEventListener('click', (e) => {
+            if (e.target === erModal) {
+                closeErDiagramModal();
+            }
+        });
     }
 }
 
@@ -1179,4 +1315,28 @@ function handleApiError(error) {
         return getLocalizedText('alert.server_error');
     }
     return error.message;
+}
+
+// ================================================================
+// ER图相关功能
+// ================================================================
+
+/**
+ * 打开ER图模态框
+ */
+function openErDiagramModal() {
+    const modal = document.getElementById('er-diagram-modal');
+    if (modal) {
+        modal.classList.add('show');
+    }
+}
+
+/**
+ * 关闭ER图模态框
+ */
+function closeErDiagramModal() {
+    const modal = document.getElementById('er-diagram-modal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
 }

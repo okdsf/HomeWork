@@ -930,3 +930,149 @@ button:disabled:hover {
         text-align: left;
     }
 }
+
+/* ===== ER Diagram Button ===== */
+.er-btn {
+    position: absolute;
+    left: 2.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 0.6rem 1.4rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+}
+
+.er-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.er-btn:active {
+    transform: translateY(-50%) scale(0.98);
+}
+
+/* ===== ER Diagram Modal ===== */
+.er-modal-content {
+    max-width: 900px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+#er-diagram-container {
+    background: linear-gradient(135deg, #f8fafc, #fff);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 1.5rem 0;
+    border: 2px solid var(--primary-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+}
+
+#er-diagram-container .mermaid {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#er-diagram-container svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ===== ER Legend ===== */
+.er-legend {
+    background: var(--primary-light);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.er-legend p {
+    margin-bottom: 0.8rem;
+    color: var(--text-dark);
+    font-size: 1.1rem;
+}
+
+.er-legend ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.8rem;
+}
+
+.er-legend li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+}
+
+.er-legend code {
+    background: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    border: 1px solid #e0e0e0;
+}
+
+.legend-pk {
+    background: linear-gradient(135deg, var(--success-color), #40C057);
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.legend-fk {
+    background: linear-gradient(135deg, var(--primary-color), #8EC5FC);
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+/* ===== ER Diagram Responsive ===== */
+@media (max-width: 768px) {
+    .er-btn {
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        margin-top: 0.5rem;
+    }
+
+    .er-btn:hover {
+        transform: scale(1.05);
+    }
+
+    .er-modal-content {
+        padding: 1.5rem;
+    }
+
+    #er-diagram-container {
+        padding: 1rem;
+        min-height: 300px;
+    }
+
+    .er-legend ul {
+        grid-template-columns: 1fr;
+    }
+}
